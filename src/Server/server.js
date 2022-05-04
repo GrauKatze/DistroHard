@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const path = require('path')
+const { text } = require('express')
 
 const router = express.Router()
 const app = express()
@@ -9,7 +10,7 @@ const viewsDirPath = path.join(__dirname, '../Client/www/views')
 const indexDirPath = path.join(__dirname, '../Client/www/')
 
 const PORT = 3000
-app.use(express.static(viewsDirPath, { extensions: ['html'] }))
+
 app.use(
   '/css',
   express.static(path.join(__dirname, '../../node_modules/bootstrap/dist/css'))
@@ -22,13 +23,29 @@ app.use(
   '/jquery',
   express.static(path.join(__dirname, '../../node_modules/jquery/dist'))
 )
+app.use(express.json())
+
+//API
 
 app.get('/', function (req, res) {
   res.sendFile(indexDirPath + '/index.html')
 })
+app.get('/about', function (req, res) {
+  res.sendFile(viewsDirPath + '/about.html')
+})
+app.get('/database', function (req, res) {
+  res.sendFile(viewsDirPath + '/dataBase.html')
+})
+
+// app.post('/', (req, res) => {
+//   res.status(200).json({ pi: req.body.a })
+// })
 
 app.use(function (req, res) {
   res.status(404).sendFile(viewsDirPath + '/404.html')
+})
+app.get(`/pipi`, function (req, res) {
+  res.send(text)
 })
 
 // app.listen(PORT, () => console.log(`My port is ${PORT}`))

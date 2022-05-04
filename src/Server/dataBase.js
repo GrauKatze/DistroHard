@@ -1,29 +1,76 @@
-const Sequelize = require('sequelize')
-const db = new Sequelize('postgres://graukatze:1234@localhost:5432/DistroHard')
+const { json } = require('express/lib/response')
+const { Sequelize, Model, DataTypes } = require('sequelize')
+const sequelize = new Sequelize('DistroHard', 'graukatze', '1234', {
+  host: 'localhost',
+  dialect: 'postgres',
+})
 
-const Hard = db.define('HARDS', {
-  id: {
-    type: Sequelize.UUID,
-    defaultValue: Sequelize.UUIDV4,
-    primaryKey: true,
+class Hard extends Model {}
+Hard.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    vendor: DataTypes.STRING(50),
+    model: DataTypes.STRING(50),
+    Type: DataTypes.STRING(50),
   },
-  vendor: Sequelize.STRING(50),
-  model: Sequelize.STRING(50),
-  Type: Sequelize.STRING(50),
-})
+  {
+    sequelize,
+    modelName: 'HARD',
+  }
+)
 
-db.sync({ force: true }).then(() => {
-  Hard.create({
-    //id: 0,
-    vendor: 'pupu',
-    model: 'XJ9 3000',
-    Type: 'robot',
-  }).then((hard) => {
-    console.log(hard)
+class DistLinux extends Model {}
+DistLinux.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    vendor: DataTypes.STRING(50),
+    version: DataTypes.STRING(50),
+  },
+  { sequelize, modelName: 'DistrLinux' }
+)
+
+class Status extends Model {}
+Status.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    Hard_id: {
+      type: DataTypes.UUID,
+      references: { model: Hard, key: 'id' },
+    },
+    DistLinux_id: {
+      type: DataTypes.UUID,
+      references: { model: DistLinux, key: 'id' },
+    },
+    Status: DataTypes.STRING,
+  },
+  { sequelize, modelName: 'Status' }
+)
+async function syncDataBase() {
+  await sequelize.sync({ force: true }).then(() => {
+    console.log('\n================Basa was sync================')
   })
-})
+}
+
+function createData(Table, Model, jsonData) {
+  Model.init(JSON.stringify(jsonData), { sequelize, modelName: Table })
+}
 
 module.exports = {
-  db,
+  sequelize,
+  syncDataBase,
   Hard,
+  DistLinux,
+  Status,
 }
