@@ -28,13 +28,13 @@ app.use(express.json())
 //API
 
 app.get('/', function (req, res) {
-  res.sendFile(indexDirPath + '/index.html')
+  res.status(202).sendFile(indexDirPath + '/index.html')
 })
 app.get('/about', function (req, res) {
-  res.sendFile(viewsDirPath + '/about.html')
+  res.status(202).sendFile(viewsDirPath + '/about.html')
 })
 app.get('/database', function (req, res) {
-  res.sendFile(viewsDirPath + '/dataBase.html')
+  res.status(202).sendFile(viewsDirPath + '/dataBase.html')
 })
 
 // app.post('/', (req, res) => {

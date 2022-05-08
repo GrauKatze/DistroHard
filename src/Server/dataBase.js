@@ -63,8 +63,18 @@ async function syncDataBase() {
   })
 }
 
-function createData(Table, Model, jsonData) {
-  Model.init(JSON.stringify(jsonData), { sequelize, modelName: Table })
+function insertData(Model, jsonData) {
+  Model.create(jsonData)
+}
+function updateData(modelID, jsonData) {
+  Model.update(jsonData, { where: { id: modelID } })
+}
+function deleteData(modelID) {
+  Model.del({ where: { id: modelID } })
+}
+function selectData(Model, modelID) {
+  const data = Model.findAll({ where: { id: modelID } })
+  return data
 }
 
 module.exports = {
