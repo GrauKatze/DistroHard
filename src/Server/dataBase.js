@@ -40,11 +40,6 @@ DistLinux.init(
 class Status extends Model {}
 Status.init(
   {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
     Hard_id: {
       type: DataTypes.UUID,
       references: { model: Hard, key: 'id' },
@@ -53,7 +48,7 @@ Status.init(
       type: DataTypes.UUID,
       references: { model: DistLinux, key: 'id' },
     },
-    Status: DataTypes.STRING,
+    Status: DataTypes.STRING(25),
   },
   { sequelize, modelName: 'Status' }
 )
@@ -72,8 +67,12 @@ function updateData(modelID, jsonData) {
 function deleteData(modelID) {
   Model.del({ where: { id: modelID } })
 }
-function selectData(Model, modelID) {
-  const data = Model.findAll({ where: { id: modelID } })
+function selectDataAll(Model, jsonData) {
+  const data = Model.findAll({ where: jsonData  })
+  return data
+}
+function selectDataOne(Model, jsonData) {
+  const data = Model.findOne({ where: jsonData })
   return data
 }
 
