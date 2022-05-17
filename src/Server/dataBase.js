@@ -1,4 +1,3 @@
-const { json } = require('express/lib/response')
 const { Sequelize, Model, DataTypes } = require('sequelize')
 const sequelize = new Sequelize('DistroHard', 'graukatze', '1234', {
   host: 'localhost',
@@ -19,12 +18,14 @@ Hard.init(
   },
   {
     sequelize,
-    modelName: 'HARD',
+    modelName: 'Hard',
+    timestamps: false,
+    freezeTableName: true,
   }
 )
 
-class DistLinux extends Model {}
-DistLinux.init(
+class DistroLinux extends Model {}
+DistroLinux.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -34,7 +35,12 @@ DistLinux.init(
     vendor: DataTypes.STRING(50),
     version: DataTypes.STRING(50),
   },
-  { sequelize, modelName: 'DistrLinux' }
+  {
+    sequelize,
+    modelName: 'DistroLinux',
+    timestamps: false,
+    freezeTableName: true,
+  }
 )
 
 class Status extends Model {}
@@ -46,40 +52,53 @@ Status.init(
     },
     DistLinux_id: {
       type: DataTypes.UUID,
-      references: { model: DistLinux, key: 'id' },
+      references: { model: DistroLinux, key: 'id' },
     },
     Status: DataTypes.STRING(25),
   },
-  { sequelize, modelName: 'Status' }
+  {
+    sequelize,
+    modelName: 'Status',
+    timestamps: false,
+    freezeTableName: true,
+  }
 )
+
 async function syncDataBase() {
-  await sequelize.sync({ force: true }).then(() => {
+  await sequelize.sync({}).then(() => {
     console.log('\n================Basa was sync================')
   })
 }
 
+//===========================
+//-----FUNC FOR DATABASE-----
+//===========================
+//work
 function insertData(Model, jsonData) {
   Model.create(jsonData)
 }
 function updateData(modelID, jsonData) {
   Model.update(jsonData, { where: { id: modelID } })
 }
-function deleteData(modelID) {
-  Model.del({ where: { id: modelID } })
+//work
+function deleteData(Model, modelID) {
+  Model.destroy({ where: { id: modelID } })
 }
-function selectDataAll(Model, jsonData) {
-  const data = Model.findAll({ where: jsonData  })
-  return data
+//work
+function selectDataAll(Model) {
+  return Model.findAll()
 }
 function selectDataOne(Model, jsonData) {
-  const data = Model.findOne({ where: jsonData })
-  return data
+  return Model.findOne({ where: jsonData })
 }
 
 module.exports = {
   sequelize,
   syncDataBase,
   Hard,
-  DistLinux,
+  DistroLinux,
   Status,
+  selectDataAll,
+  insertData,
+  deleteData,
 }
