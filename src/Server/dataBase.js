@@ -1,11 +1,11 @@
-const { Sequelize, Model, DataTypes } = require('sequelize')
-const sequelize = new Sequelize('DistroHard', 'graukatze', '1234', {
-  host: 'localhost',
-  dialect: 'postgres',
-})
+const { Sequelize, Model, DataTypes } = require("sequelize");
+const sequelize = new Sequelize("distrohard", "graukatze", "1234", {
+  host: "localhost",
+  dialect: "postgres",
+});
 
-class Hard extends Model {}
-Hard.init(
+class Hards extends Model {}
+Hards.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -18,11 +18,11 @@ Hard.init(
   },
   {
     sequelize,
-    modelName: 'Hard',
+    modelName: "Hards",
     timestamps: false,
     freezeTableName: true,
   }
-)
+);
 
 class DistroLinux extends Model {}
 DistroLinux.init(
@@ -37,37 +37,96 @@ DistroLinux.init(
   },
   {
     sequelize,
-    modelName: 'DistroLinux',
+    modelName: "DistroLinux",
     timestamps: false,
     freezeTableName: true,
   }
-)
+);
+class Errors extends Model {}
+Errors.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    text: {
+      type: DataTypes.TEXT,
+    },
+  },
+  {
+    sequelize,
+    modelName: "Errors",
+    timestamps: false,
+    freezeTableName: true,
+  }
+);
 
-class Status extends Model {}
-Status.init(
+class HardStatusOnLinux extends Model {}
+HardStatusOnLinux.init(
   {
     Hard_id: {
       type: DataTypes.UUID,
-      references: { model: Hard, key: 'id' },
+      references: { model: Hards, key: "id" },
     },
     DistLinux_id: {
       type: DataTypes.UUID,
-      references: { model: DistroLinux, key: 'id' },
+      references: { model: DistroLinux, key: "id" },
     },
     Status: DataTypes.STRING(25),
   },
   {
     sequelize,
-    modelName: 'Status',
+    modelName: "HardStatusOnLinux",
     timestamps: false,
     freezeTableName: true,
   }
-)
+);
+class ErrorStatusOnLinux extends Model {}
+ErrorStatusOnLinux.init(
+  {
+    Error_id: {
+      type: DataTypes.UUID,
+      references: { model: Errors, key: "id" },
+    },
+    DistLinux_id: {
+      type: DataTypes.UUID,
+      references: { model: DistroLinux, key: "id" },
+    },
+    Status: DataTypes.STRING(25),
+  },
+  {
+    sequelize,
+    modelName: "ErrorStatusOnLinux",
+    timestamps: false,
+    freezeTableName: true,
+  }
+);
+class ErrorStatusOnHard extends Model {}
+ErrorStatusOnHard.init(
+  {
+    Error_id: {
+      type: DataTypes.UUID,
+      references: { model: Errors, key: "id" },
+    },
+    Hard_id: {
+      type: DataTypes.UUID,
+      references: { model: Hards, key: "id" },
+    },
+    Status: DataTypes.STRING(25),
+  },
+  {
+    sequelize,
+    modelName: "ErrorStatusOnHards",
+    timestamps: false,
+    freezeTableName: true,
+  }
+);
 
 async function syncDataBase() {
-  await sequelize.sync({}).then(() => {
-    console.log('\n================Basa was sync================')
-  })
+  await sequelize.sync({ force: true }).then(() => {
+    console.log("\n================Basa was sync================");
+  });
 }
 
 //===========================
@@ -75,30 +134,30 @@ async function syncDataBase() {
 //===========================
 //work
 function insertData(Model, jsonData) {
-  Model.create(jsonData)
+  Model.create(jsonData);
 }
 function updateData(modelID, jsonData) {
-  Model.update(jsonData, { where: { id: modelID } })
+  Model.update(jsonData, { where: { id: modelID } });
 }
 //work
 function deleteData(Model, modelID) {
-  Model.destroy({ where: { id: modelID } })
+  Model.destroy({ where: { id: modelID } });
 }
 //work
 function selectDataAll(Model) {
-  return Model.findAll()
+  return Model.findAll();
 }
 function selectDataOne(Model, jsonData) {
-  return Model.findOne({ where: jsonData })
+  return Model.findOne({ where: jsonData });
 }
 
 module.exports = {
   sequelize,
   syncDataBase,
-  Hard,
+  Hard: Errors,
   DistroLinux,
-  Status,
+  Status: HardStatusOnLinux,
   selectDataAll,
   insertData,
   deleteData,
-}
+};

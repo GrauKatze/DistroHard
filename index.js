@@ -1,4 +1,4 @@
-const { Sequelize, where } = require('sequelize')
+const { Sequelize, where } = require("sequelize");
 const {
   syncDataBase,
   Hard,
@@ -7,13 +7,13 @@ const {
   insertData,
   selectDataAll,
   deleteData,
-} = require('./src/Server/dataBase')
-const { app, PORT } = require('./src/Server/server')
-;(async () => {
-  await serverStart()
-})()
+} = require("./src/Server/dataBase");
+const { app, PORT } = require("./src/Server/server");
+(async () => {
+  await serverStart();
+})();
 
 async function serverStart() {
-  app.listen(PORT, () => console.log(`My port is ${PORT}`))
-  await syncDataBase()
+  app.listen(PORT, () => console.log(`My port is ${PORT}`));
+  await syncDataBase();
 }
