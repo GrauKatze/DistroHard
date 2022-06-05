@@ -1,36 +1,86 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <title>DataBase</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap/dist/css/bootstrap.min.css" />
+<head>
+  <title>DataBase</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <link rel="stylesheet" href="css/bootstrap/dist/css/bootstrap.min.css" />
+</head>
 
-  </head>
-  <body>
-    <nav class="nav justify-content-center">
-      <a class="nav-link" href="/">Домашняя</a>
-      <a class="nav-link disabled" href="/dataBase">База данных</a>
-      <a class="nav-link" href="/about">О проекте</a>
-    </nav>
-    <hr>
-    <h1>Data Base</h1>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="jquery/jquery/dist/jquery.slim.min.js"></script>
+<body>
+  <nav class="nav justify-content-center navbar-light" style="background-color: #e3f2fd;">
+    <a class=" nav-link" href="/">Домашняя</a>
+    <a class="nav-link" href="/dataBase">База данных</a>
+    <a class="nav-link" href="/about">О проекте</a>
+    <a class="nav-link" href="/distr/ubu">О проекте</a>
+  </nav>
 
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-      crossorigin="anonymous"
-    ></script>
-    <script src="js/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- <h1 id="pipi">pipi</h1> -->
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>Hards</h1>
+        <hr />
+        <div class="row">
+          <form action="" method="get" id="hard-form" style="background-color: #aaaaaa">
+            <h2>Процессор</h2>
+            <div class="row g-2">
+              <div class="col-sm-6">
+                <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
+                  name="procVendor" placeholder="Выберите производителя...">
+                  <option value="intel">intel</option>
+                  <option value="amd">amd</option>
+                </select>
+              </div>
+              <div class="col-sm-6">
+                <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="procModel"
+                  name="procModel"></select>
+              </div>
+            </div>
+            <h2>Видеокарта</h2>
+            <div class="row g-2">
+              <div class="col-sm-6">
+                <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
+                  name="procVendor" placeholder="Выберите производителя...">
+                  <option value="intel">intel</option>
+                  <option value="amd">amd</option>
+                </select>
+              </div>
+              <div class="col-sm-6">
+                <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="procModel"
+                  name="procModel"></select>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary float-end md-8">
+              Найти
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="result">
+      <div id="tableResult">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Дистрибутив</th>
+              <th scope="col">Поддержка железа</th>
+              <th scope="col">Колличество уязвимостей</th>
+            </tr>
+          </thead>
+          <tbody id="bodyTableResult"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="js/../../Server/dataBase.js"></script>
+  <script src="js/Scripts/WWWdataBase.js"></script>
+  <script src="jquery/jquery/dist/jquery.slim.min.js"></script>
+  <script src="js/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+</body>
 
-  </body>
 </html>

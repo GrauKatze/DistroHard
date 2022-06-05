@@ -17,18 +17,21 @@ app.use("/jquery", express.static(path.join(__dirname, "../Client/www/")));
 app.use(express.json());
 
 //API
-
+let procVendor, procModel;
 app.get("/", function (req, res) {
-  res.status(202).sendFile(indexDirPath + "/index.html");
+  res.status(200).sendFile(indexDirPath + "/index.html");
 });
 app.get("/about", function (req, res) {
-  res.status(202).sendFile(viewsDirPath + "/about.html");
+  res.status(200).sendFile(viewsDirPath + "/about.html");
 });
 app.get("/database", function (req, res) {
-  res.status(202).sendFile(viewsDirPath + "/dataBase.html");
+  res.status(200).sendFile(viewsDirPath + "/dataBase.html");
+});
+app.post("/database?procVendor=pros&:procModel", (req, res) => {
+  res.send(req.params);
 });
 app.get("/distr/:distrName", function (req, res) {
-  res.status(202).sendFile(viewsDirPath + "/Distr.html");
+  res.status(200).sendFile(viewsDirPath + "/Distr.html");
   // res.send(req.params);
 });
 

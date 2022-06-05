@@ -8,8 +8,8 @@ class Hards extends Model {}
 Hards.init(
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
     },
     vendor: DataTypes.STRING(50),
@@ -28,8 +28,8 @@ class DistroLinux extends Model {}
 DistroLinux.init(
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
     },
     vendor: DataTypes.STRING(50),
@@ -46,12 +46,12 @@ class Errors extends Model {}
 Errors.init(
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
     },
-    text: {
-      type: DataTypes.TEXT,
+    codeCVE: {
+      type: DataTypes.STRING(20),
     },
   },
   {
@@ -61,16 +61,20 @@ Errors.init(
     freezeTableName: true,
   }
 );
-
 class HardStatusOnLinux extends Model {}
 HardStatusOnLinux.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     Hard_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       references: { model: Hards, key: "id" },
     },
     DistLinux_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       references: { model: DistroLinux, key: "id" },
     },
     Status: DataTypes.STRING(25),
@@ -86,11 +90,11 @@ class ErrorStatusOnLinux extends Model {}
 ErrorStatusOnLinux.init(
   {
     Error_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       references: { model: Errors, key: "id" },
     },
     DistLinux_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       references: { model: DistroLinux, key: "id" },
     },
     Status: DataTypes.STRING(25),
@@ -106,11 +110,11 @@ class ErrorStatusOnHard extends Model {}
 ErrorStatusOnHard.init(
   {
     Error_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       references: { model: Errors, key: "id" },
     },
     Hard_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       references: { model: Hards, key: "id" },
     },
     Status: DataTypes.STRING(25),
@@ -124,7 +128,7 @@ ErrorStatusOnHard.init(
 );
 
 async function syncDataBase() {
-  await sequelize.sync({ force: true }).then(() => {
+  await sequelize.sync({ alter: true }).then(() => {
     console.log("\n================Basa was sync================");
   });
 }
