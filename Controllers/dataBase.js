@@ -4,25 +4,60 @@ const sequelize = new Sequelize("distrohard", "graukatze", "1234", {
   dialect: "postgres",
 });
 
-class Hards extends Model { }
-Hards.init(
+class Vendor extends Model { }
+Vendor.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    vendor: DataTypes.STRING(50),
-    model: DataTypes.STRING(50),
-    Type: DataTypes.STRING(50),
+    companyName: DataTypes.STRING(50)
   },
   {
     sequelize,
-    modelName: "Hards",
+    modelName: "Vendors",
     timestamps: false,
     freezeTableName: true,
   }
-);
+)
+class Processor extends Model { }
+Processor.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    modelName: DataTypes.STRING(50),
+    vendor_id: { type: DataTypes.INTEGER, references: { model: Vendor, key: "id" } },
+  },
+  {
+    sequelize,
+    modelName: "Processors",
+    timestamps: false,
+    freezeTableName: true,
+  }
+)
+class VideoCard extends Model { }
+VideoCard.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    modelName: DataTypes.STRING(50),
+    vendor_id: { type: DataTypes.INTEGER, references: { model: Vendor, key: "id" } },
+
+  },
+  {
+    sequelize,
+    modelName: "VideoCards",
+    timestamps: false,
+    freezeTableName: true,
+  }
+)
 
 class DistroLinux extends Model { }
 DistroLinux.init(
@@ -71,7 +106,7 @@ HardStatusOnLinux.init(
     },
     Hard_id: {
       type: DataTypes.INTEGER,
-      references: { model: Hards, key: "id" },
+      references: { model: Processor, key: "id" },
     },
     DistLinux_id: {
       type: DataTypes.INTEGER,
@@ -115,7 +150,7 @@ ErrorStatusOnHard.init(
     },
     Hard_id: {
       type: DataTypes.INTEGER,
-      references: { model: Hards, key: "id" },
+      references: { model: Processor, key: "id" },
     },
     Status: DataTypes.STRING(25),
   },
@@ -131,7 +166,6 @@ async function syncDataBase() {
   await sequelize.sync({ alter: true }).then(() => {
     console.log("\n================Basa was sync================");
   });
-  console.log(await returnResultFind())
 }
 
 //===========================
@@ -156,16 +190,18 @@ function selectDataAll(Model) {
 function selectDataOne(Model, jsonData) {
   return Model.findOne({ where: jsonData });
 }
-function returnResultFind() { return selectDataAll(Hards) }
+function returnResultFind() { return selectDataAll(Hard) }
 
 module.exports = {
   sequelize,
   syncDataBase,
-  Hards,
   DistroLinux,
-  Status: HardStatusOnLinux,
+  HardStatusOnLinux,
   selectDataAll,
   insertData,
   deleteData,
-  returnResultFind
+  returnResultFind,
+  Vendor,
+  Processor,
+  VideoCard
 };

@@ -1,6 +1,7 @@
 const express = require("express");
 const hbs = require("hbs");
 const path = require("path");
+const { syncDataBase } = require("./Controllers/dataBase");
 const { dataBaseRouter } = require("./Routers/dataBaseRouter");
 const { homeRouter } = require("./Routers/homeRouter");
 
@@ -22,10 +23,11 @@ app.use('/', homeRouter)
 
 
 app.use(function (req, res) {
-  res.status(404).sendFile(__dirname + "views/404.html");
+  res.status(404).render("404.hbs");
 });
 
 app.listen(PORT, () => console.log(`My port is ${PORT}`));
+syncDataBase()
 module.exports = {
   app,
   PORT,

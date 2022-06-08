@@ -13,62 +13,10 @@
   {{> menu}}
 
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>Hards</h1>
-        <hr />
-        <div class="row">
-          <form action="" method="get" id="hard-form" style="background-color: #aaaaaa">
-            <h2>Процессор</h2>
-            <div class="row g-2">
-              <div class="col-sm-6">
-                <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
-                  name="procVendor" placeholder="Выберите производителя...">
-                  <option value="intel">intel</option>
-                  <option value="amd">amd</option>
-                </select>
-              </div>
-              <div class="col-sm-6">
-                <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="procModel"
-                  name="procModel"></select>
-              </div>
-            </div>
-            <h2>Видеокарта</h2>
-            <div class="row g-2">
-              <div class="col-sm-6">
-                <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
-                  name="procVendor" placeholder="Выберите производителя...">
-                  <option value="intel">intel</option>
-                  <option value="amd">amd</option>
-                </select>
-              </div>
-              <div class="col-sm-6">
-                <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="procModel"
-                  name="procModel"></select>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary float-end md-8">
-              Найти
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div class="result">
-      <div id="tableResult">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Дистрибутив</th>
-              <th scope="col">Поддержка железа</th>
-              <th scope="col">Колличество уязвимостей</th>
-            </tr>
-          </thead>
-          <tbody id="bodyTableResult"></tbody>
-        </table>
-      </div>
-    </div>
+    <a href="/dataBase/search" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">Search</a>
   </div>
+
+  <script src="../Controllers/WWWdataBase.js"></script>
 
   <script src="jquery/dist/jquery.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
