@@ -3,7 +3,6 @@
 
 <head>
     <title>{{title}}</title>
-    <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css" />
@@ -11,17 +10,16 @@
 
 <body>
     {{> menu}}
-    {{title}}
     <div class="container">
         <div class="row">
-            <form action="" method="get" id="hard-form" style="background-color: #aaaaaa">
+            <form action="" method="post" id="hard-form" style="background-color: #aaaaaa">
                 <h2>Процессор</h2>
                 <div class="row g-2">
                     <div class="col-sm-6">
                         <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
                             name="procVendor">
                             {{#each vendor}}
-                            <option value="{{this.companyName}}">{{this.companyName}}</option>
+                            <option value="{{this.id}}">{{this.companyName}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -37,16 +35,16 @@
                 <h2>Видеокарта</h2>
                 <div class="row g-2">
                     <div class="col-sm-6">
-                        <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
+                        <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example"
                             name="videoCardVendor" placeholder="Выберите производителя...">
                             {{#each vendor}}
-                            <option value="{{this.companyName}}">{{this.companyName}}</option>
+                            <option value="{{this.id}}">{{this.companyName}}</option>
                             {{/each}}
                         </select>
                     </div>
                     <div class="col-sm-6">
                         <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example"
-                            id="procModel" name="procModel">
+                            id="videoCardModel" name="videoCardModel">
                             {{#each videoCard}}
                             <option value="{{this.modelName}}">{{this.modelName}}</option>
                             {{/each}}
@@ -59,38 +57,6 @@
             </form>
         </div>
         <hr>
-        <div class="result">
-            <div id="tableResult">
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th>id</th>
-                            <th>vendor</th>
-                            <th>model</th>
-                            <th>type</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        {{#each hards}}
-                        <tr>
-                            <td>{{this.id}}</td>
-                            <td>{{this.vendor}}</td>
-                            <td>{{this.model}}</td>
-                            <td>{{this.Type}}</td>
-                            <td>
-                                <a href="/edit/{{this.id}}">Edit</a>|
-                                <form action="delete/{{this.id}}" method="POST" style="display:inline;">
-                                    <input type="submit" value="Delete" />
-                                </form>
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
     <script src="jquery/dist/jquery.slim.min.js"></script>
 

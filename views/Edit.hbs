@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>{{title}}</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+
+<body>
+    {{> menu}}
+    <div class="container">
+        <div class="row">
+            <div class="container">
+                <label>old data:</label>
+                <p>ID - {{proc.id}} Vendor -{{venID}} modelName - {{proc.modelName}}</p>
+            </div>
+            <form action="/edit" method="POST">
+                <label>Vendor
+                </label><br>
+                <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
+                    name="procVendor">
+                    {{#each vendor}}
+                    <option value="{{this.id}}">{{this.companyName}}</option>
+                    {{/each}}
+                </select>
+                <a class="btn btn-primary btn-sm " href="#" role="button"> Edit</a>
+            </form>
+        </div>
+    </div>
+    <script src="jquery/dist/jquery.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>
