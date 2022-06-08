@@ -5,6 +5,10 @@ const {
     Processor,
     selectDataAll,
     selectDataAllFiltr,
+    ErrorStatusOnProcessor,
+    ProcessorStatusOnLinux,
+    ErrorStatusOnVideoCard,
+    VideoCardStatusOnLinux,
 } = require("./dataBase");
 
 function deleteProcDB(req, res) {
@@ -45,18 +49,66 @@ function postDeleteProcDB(req, res) {
     console.log("proc");
     if (!req.params) return res.sendStatus(400);
     console.log(req.params);
-    deleteData(Processor, req.params.procID);
-    setTimeout(() => {
-        res.redirect("/dataBase/hards");
-    }, 1000);
+
+    ErrorStatusOnProcessor.findAll({
+        raw: true,
+        where: { Processor_id: req.params.procID },
+    })
+        .then((ESONP) => {
+            if (ESONP !== null)
+                ESONP.forEach((el) => {
+                    ErrorStatusOnProcessor.destroy({ where: { id: el.id } });
+                });
+        })
+        .then(
+            ProcessorStatusOnLinux.findAll({
+                where: { Processor_id: req.params.procID },
+            })
+                .then((PSOL) => {
+                    if (PSOL !== null)
+                        PSOL.forEach((el) => {
+                            ProcessorStatusOnLinux.destroy({
+                                where: { id: el.id },
+                            });
+                        });
+                })
+                .then(() =>
+                    Processor.destroy({ where: { id: req.params.procID } })
+                )
+                .then(() => res.redirect("/dataBase/hards"))
+        );
 }
 function postDeleteVideoCardDB(req, res) {
-    if (!req.body) return res.sendStatus(400);
-    console.log(req.body);
-    // deleteData(VideoCard, req.body.videoCardID);
-    setTimeout(() => {
-        res.redirect("/dataBase/hards");
-    }, 1000);
+    if (!req.params) return res.sendStatus(400);
+    console.log(req.params);
+    ErrorStatusOnVideoCard.findAll({
+        where: { VideoCard_id: req.params.videoCardID },
+    })
+        .then((EROVC) => {
+            if (EROVC !== null)
+                EROVC.forEach((el) => {
+                    ErrorStatusOnVideoCard.destroy({ where: { id: el.id } });
+                });
+        })
+        .then(() =>
+            VideoCardStatusOnLinux.findAll({
+                where: { VideoCard_id: req.params.videoCardID },
+            })
+                .then((VCSOL) => {
+                    if (VCSOL !== null)
+                        VCSOL.forEach((el) =>
+                            VideoCardStatusOnLinux.destroy({
+                                where: { id: el.id },
+                            })
+                        );
+                })
+                .then(
+                    VideoCard.destroy({
+                        where: { id: req.params.videoCardID },
+                    })
+                )
+                .then(() => res.redirect("/dataBase/hards"))
+        );
 }
 
 module.exports = {

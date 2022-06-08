@@ -10,7 +10,7 @@ const deleteBaseRouter = express.Router();
 const urlencodedParser = express.urlencoded({ extended: false });
 
 deleteBaseRouter.get("/proc/:procID", deleteProcDB);
-deleteBaseRouter.get("/videoCard/:procID", deleteVideoCardDB);
+deleteBaseRouter.get("/videoCard/:videoCardID", deleteVideoCardDB);
 deleteBaseRouter.post("/proc/:procID", postDeleteProcDB);
-deleteBaseRouter.post("/videoCard/:procID", postDeleteVideoCardDB);
+deleteBaseRouter.post("/videoCard/:videoCardID", postDeleteVideoCardDB);
 module.exports = { deleteBaseRouter };

@@ -37,8 +37,8 @@
                     <td>{{this.modelName}}</td>
                     <td>
                         <a class="btn btn-primary" href="/dataBase/edit/videoCard/{{this.id}}">Edit</a>|
-                        <form action="/dataBase/delete/proc/{{this.id}}" method="get">
-                            <a class="btn btn-danger" href="/dataBase/delete/videoCard/{{this.id}}">delete</a>
+                        <form action="/dataBase/delete/videoCard/{{this.id}}" method="post">
+                            <input class="btn btn-danger" type="submit" value="delete" />
                         </form>
 
                     </td>

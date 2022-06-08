@@ -229,8 +229,8 @@ async function updateData(Model, modelID, jsonData) {
     Model.update(jsonData, { where: { id: modelID } });
 }
 //work
-async function deleteData(Model, modelID) {
-    Model.destroy({ where: { id: modelID } });
+async function deleteData(Model, jsonData) {
+    Model.destroy({ where: jsonData });
 }
 //work
 async function selectDataAll(Model) {
@@ -259,4 +259,9 @@ module.exports = {
     VideoCardStatusOnLinux,
     Errors,
     updateData,
+    ErrorStatusOnLinux,
+    ErrorStatusOnVideoCard,
+    ErrorStatusOnProcessor,
+    VideoCardStatusOnLinux,
+    ProcessorStatusOnLinux,
 };

@@ -1,4 +1,10 @@
-const { selectDataAll, Vendor, insertData, Processor } = require("./dataBase");
+const {
+    selectDataAll,
+    Vendor,
+    insertData,
+    Processor,
+    VideoCard,
+} = require("./dataBase");
 
 function createDataBase(req, res) {
     selectDataAll(Vendor)
@@ -20,7 +26,7 @@ function postCreateDataBase(req, res) {
     let Modul;
     if (req.body.hardType === "Processor") {
         Modul = Processor;
-    }
+    } else if (req.body.hardType === "VideoCard") Modul = VideoCard;
     insertData(Modul, newNote);
     setTimeout(() => {
         res.redirect("/dataBase/hards");
