@@ -6,37 +6,46 @@ const {
     selectDataAll,
     selectDataOne,
     VideoCard,
+    DistroLinux,
+    ProcessorStatusOnLinux,
+    VideoCardStatusOnLinux,
 } = require("./dataBase");
 
 function editProc(req, res) {
     const procID = req.params.procID;
-    selectDataAll(Vendor)
-        .then((vendor) => {
-            selectDataAllFiltr(Processor, { id: procID }).then((proc) => {
-                Vendor.findByPk(proc[0].vendor_id).then((vendorID) =>
-                    res.render("Edit.hbs", {
-                        obj: proc[0],
-                        vendor: vendor,
-                        venID: vendorID.companyName,
-                    })
-                );
+    Vendor.findAll()
+        .then((vendors) => {
+            Processor.findOne({ where: { id: procID } }).then((proc) => {
+                Vendor.findByPk(proc.vendor_id).then((vendor) => {
+                    DistroLinux.findAll().then((linux) =>
+                        res.render("Edit.hbs", {
+                            obj: proc,
+                            linux: linux,
+                            vendor: vendors,
+                            venID: vendor.companyName,
+                        })
+                    );
+                });
             });
         })
         .catch((err) => console.log(err));
 }
-function editVideCard(req, res) {
+function editVideoCard(req, res) {
     const videoCardID = req.params.videoCardID;
-    selectDataAll(Vendor)
-        .then((vendor) => {
-            selectDataAllFiltr(VideoCard, { id: videoCardID }).then(
+    Vendor.findAll()
+        .then((vendors) => {
+            VideoCard.findOne({ where: { id: videoCardID } }).then(
                 (videoCard) => {
-                    Vendor.findByPk(videoCard[0].vendor_id).then((vendorID) =>
-                        res.render("Edit.hbs", {
-                            obj: videoCard[0],
-                            vendor: vendor,
-                            venID: vendorID.companyName,
-                        })
-                    );
+                    Vendor.findByPk(videoCard.vendor_id).then((vendor) => {
+                        DistroLinux.findAll().then((linux) =>
+                            res.render("Edit.hbs", {
+                                obj: videoCard,
+                                linux: linux,
+                                vendor: vendors,
+                                venID: vendor.companyName,
+                            })
+                        );
+                    });
                 }
             );
         })
@@ -45,24 +54,98 @@ function editVideCard(req, res) {
 
 function postEditProc(req, res) {
     if (!req.body) return res.sendStatus(400);
-    let newNote = {
-        vendor_id: req.body.vendor_id,
-        modelName: req.body.modelName,
-    };
-    updateData(Processor, req.body.id, newNote);
+    console.log(req.body);
+    console.log(req.params);
+    Processor.update(
+        {
+            modelName: req.body.modelName,
+            vendor_id: req.body.Vendor,
+        },
+        {
+            where: {
+                id: req.params.procID,
+            },
+        }
+    )
+        .then(() => {
+            if (req.body.LinuxStatus !== null) {
+                ProcessorStatusOnLinux.findOne({
+                    where: {
+                        Processor_id: req.params.procID,
+                        DistLinux_id: req.body.linuxVendor,
+                    },
+                }).then((PSOL) => {
+                    if (PSOL !== null) {
+                        ProcessorStatusOnLinux.update(
+                            { Status: req.body.linuxStatus },
+                            {
+                                where: {
+                                    Processor_id: req.params.procID,
+                                    DistLinux_id: req.body.linuxVendor,
+                                },
+                            }
+                        );
+                    } else {
+                        ProcessorStatusOnLinux.create({
+                            Processor_id: req.params.procID,
+                            DistLinux_id: req.body.linuxVendor,
+                            Status: req.body.linuxStatus,
+                        });
+                    }
+                });
+            }
+        })
+        .then(() => res.redirect("/dataBase/hards"));
 }
 function postEditVideoCard(req, res) {
     if (!req.body) return res.sendStatus(400);
-    let newNote = {
-        vendor_id: req.body.vendor_id,
-        modelName: req.body.modelName,
-    };
-    updateData(VideoCard, req.body.id, newNote);
+    console.log(req.body);
+    console.log(req.params);
+    VideoCard.update(
+        {
+            modelName: req.body.modelName,
+            vendor_id: req.body.Vendor,
+        },
+        {
+            where: {
+                id: req.params.videoCardID,
+            },
+        }
+    )
+        .then(() => {
+            if (req.body.LinuxStatus !== null) {
+                VideoCardStatusOnLinux.findOne({
+                    where: {
+                        VideoCard_id: req.params.videoCardID,
+                        DistLinux_id: req.body.linuxVendor,
+                    },
+                }).then((PSOL) => {
+                    if (PSOL !== null) {
+                        VideoCardStatusOnLinux.update(
+                            { Status: req.body.linuxStatus },
+                            {
+                                where: {
+                                    VideoCard_id: req.params.videoCardID,
+                                    DistLinux_id: req.body.linuxVendor,
+                                },
+                            }
+                        );
+                    } else {
+                        VideoCardStatusOnLinux.create({
+                            VideoCard_id: req.params.videoCardID,
+                            DistLinux_id: req.body.linuxVendor,
+                            Status: req.body.linuxStatus,
+                        });
+                    }
+                });
+            }
+        })
+        .then(() => res.redirect("/dataBase/hards"));
 }
 
 module.exports = {
     editProc,
-    editVideCard,
+    editVideoCard,
     postEditProc,
     postEditVideoCard,
 };

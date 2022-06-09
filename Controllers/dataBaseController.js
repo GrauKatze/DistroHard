@@ -60,54 +60,58 @@ function searchDataBase(req, res, next) {
 }
 
 async function postSearchDataBase(req, res) {
-    let procStatus = [];
-    if (!req.body) return res.sendStatus(400);
-    console.log(req.body);
-    selectDataOne(Processor, { modelName: req.body.procModel }).then(
+    let hardStatus = [];
+    Processor.findOne({ where: { modelName: req.body.procModel } }).then(
         (processor) => {
-            selectDataAllFiltr(ProcessorStatusOnLinux, {
-                Processor_id: processor.id,
-            }).then((procLinuxResult) => {
-                console.log(procLinuxResult);
-                procLinuxResult.forEach((el) => {
-                    selectDataAllFiltr(DistroLinux, {
-                        id: el.DistLinux_id,
-                    }).then((data) => {
-                        procStatus.push({
-                            procModel: processor.modelName,
-                            OS: data[0].vendor,
-                            status: el.Status,
+            ProcessorStatusOnLinux.findAll({
+                where: { Processor_id: processor.id },
+            })
+                .then((procStatusLinux) => {
+                    procStatusLinux.forEach((pSL) => {
+                        DistroLinux.findAll({
+                            where: { id: pSL.DistLinux_id },
+                        }).then((procData) => {
+                            hardStatus.push({
+                                hardModel: processor.modelName,
+                                OS: procData[0].vendor,
+                                status: pSL.Status,
+                            });
                         });
                     });
-                });
-            });
-        }
-    );
-    let videoCardStatus = [];
-
-    selectDataOne(VideoCard, { modelName: req.body.videoCardModel }).then(
-        (videoCard) => {
-            selectDataAllFiltr(VideoCardStatusOnLinux, {
-                VideoCard_id: videoCard.id,
-            }).then((videoCardLinuxResult) => {
-                console.log(videoCardLinuxResult);
-                videoCardLinuxResult.forEach((el) => {
-                    selectDataAllFiltr(DistroLinux, {
-                        id: el.DistLinux_id,
-                    }).then((data) => {
-                        videoCardStatus.push({
-                            videoCardModel: videoCard.modelName,
-                            OS: data[0].vendor,
-                            status: el.Status,
-                        });
+                })
+                .then(() => {
+                    VideoCard.findOne({
+                        where: { modelName: req.body.videoCardModel },
+                    }).then((videoCard) => {
+                        VideoCardStatusOnLinux.findAll({
+                            where: { VideoCard_id: videoCard.id },
+                        })
+                            .then((videoCardStatusLinux) => {
+                                videoCardStatusLinux.forEach((vcSL) => {
+                                    DistroLinux.findAll({
+                                        where: { id: vcSL.DistLinux_id },
+                                    }).then((videoCardData) => {
+                                        hardStatus.push({
+                                            hardModel: videoCard.modelName,
+                                            OS: videoCardData[0].vendor,
+                                            status: vcSL.Status,
+                                        });
+                                    });
+                                });
+                            })
+                            .then(() =>
+                                setTimeout(function () {
+                                    res.render("results.hbs", {
+                                        title: "result",
+                                        result: hardStatus,
+                                    });
+                                    console.log(hardStatus);
+                                }, 2000)
+                            );
                     });
                 });
-            });
         }
     );
-    setTimeout(function () {
-        res.send(videoCardStatus);
-    }, 1000);
 }
 
 module.exports = {

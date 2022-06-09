@@ -15,18 +15,34 @@
         <div class="row">
             <div class="container">
                 <label>old data:</label>
-                <p>ID - {{proc.id}} Vendor -{{venID}} modelName - {{proc.modelName}}</p>
+                <p>ID - {{obj.id}} Vendor -{{venID}} modelName - {{obj.modelName}}</p>
             </div>
-            <form action="/edit" method="POST">
+            <form method="POST">
                 <label>Vendor
                 </label><br>
                 <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
-                    name="procVendor">
+                    name="Vendor">
                     {{#each vendor}}
                     <option value="{{this.id}}">{{this.companyName}}</option>
                     {{/each}}
                 </select>
-                <a class="btn btn-primary btn-sm " href="#" role="button"> Edit</a>
+                <div class="input-group mb-3">
+                    <input type="text" name="modelName" class="form-control md-5" placeholder="modelName">
+                </div>
+                <div class="input-group mb-3">
+                    <select class="form-select form-select" aria-label=".form-select-sm example" id="Type"
+                        name="linuxVendor">
+                        {{#each linux}}
+                        <option value="{{this.id}}">{{this.vendor}}</option>
+                        {{/each}}
+                    </select>
+                    <input type="text" name="linuxStatus" class="form-control" placeholder="LinuxStatus">
+                </div>
+
+
+                <button type="submit" class="btn btn-primary float-end md-8">
+                    Изменить
+                </button>
             </form>
         </div>
     </div>
