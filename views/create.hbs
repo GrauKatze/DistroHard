@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>{{title}}</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+
+<body>
+    {{> menu}}
+    <div class="container">
+        <div class="row">
+            <form method="post">
+                <label>type</label>
+                <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" name="hardType">
+                    <option value="Processor">proc</option>
+                    <option value="VideoCard">videocard</option>
+                </select>
+                <label>vendor</label>
+                <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" name="hardVendor">
+                    {{#each vendor}}
+                    <option value="{{this.id}}">{{this.companyName}}</option>
+                    {{/each}}
+                </select>
+                <input name="modelName" type="text" class="form-control md-3" placeholder="modelName"
+                    aria-label="modelName">
+
+                <button type="submit" class="btn btn-primary float-end md-8">
+                    добавить
+                </button>
+            </form>
+        </div>
+    </div>
+    <script src="jquery/dist/jquery.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>{{title}}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+
+<body>
+    {{> menu}}
+    <div class="container">
+        <div class="row">
+            <form action="" method="post" id="hard-form" style="background-color: #aaaaaa">
+                <h2>Процессор</h2>
+                <div class="row g-2">
+                    <div class="col-sm-6">
+                        <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
+                            name="procVendor">
+                            {{#each vendor}}
+                            <option value="{{this.id}}">{{this.companyName}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example"
+                            id="procModel" name="procModel">
+                            {{#each processor}}
+                            <option value="{{this.modelName}}">{{this.modelName}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+                <h2>Видеокарта</h2>
+                <div class="row g-2">
+                    <div class="col-sm-6">
+                        <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example"
+                            name="videoCardVendor" placeholder="Выберите производителя...">
+                            {{#each vendor}}
+                            <option value="{{this.id}}">{{this.companyName}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example"
+                            id="videoCardModel" name="videoCardModel">
+                            {{#each videoCard}}
+                            <option value="{{this.modelName}}">{{this.modelName}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary float-end md-8">
+                    Найти
+                </button>
+            </form>
+        </div>
+        <hr>
+    </div>
+    <script src="jquery/dist/jquery.slim.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>
