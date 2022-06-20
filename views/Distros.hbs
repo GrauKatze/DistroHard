@@ -23,12 +23,6 @@
                 <tr>
                     <td>{{this.id}}</td>
                     <td>{{this.vendor}}</td>
-                    <td>
-                        <a href="/dataBase/edit/distr{{this.id}}">Edit</a>|
-                        <form action="/dataBase/delete/distr{{this.id}}" method="POST" style="display:inline;">
-                            <input type="submit" value="Delete" />
-                        </form>
-                    </td>
                 </tr>
                 {{/each}}
             </tbody>
