@@ -15,20 +15,13 @@
         <table class="table table-striped table-sm">
             <thead>
                 <th>id</th>
-                <th>vendor</th>
-                <th>model</th>
+                <th>CVE</th>
             </thead>
             <tbody>
                 {{#each err}}
                 <tr>
                     <td>{{this.id}}</td>
                     <td>{{this.codeCVE}}</td>
-                    <td>
-                        <a href="/dataBase/edit/errors/{{this.id}}">Edit</a>|
-                        <form action="/dataBasedelete/errors/{{this.id}}" method="POST" style="display:inline;">
-                            <input type="submit" value="Delete" />
-                        </form>
-                    </td>
                 </tr>
                 {{/each}}
             </tbody>

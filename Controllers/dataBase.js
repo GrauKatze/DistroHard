@@ -3,7 +3,24 @@ const sequelize = new Sequelize("distrohard", "graukatze", "1234", {
     host: "localhost",
     dialect: "postgres",
 });
+let logIN = true;
 
+class User extends Model {}
+User.init(
+    {
+        login: {
+            type: DataTypes.STRING(12),
+            primaryKey: true,
+        },
+        pass: DataTypes.STRING(50),
+    },
+    {
+        sequelize,
+        modelName: "Users",
+        timestamps: false,
+        freezeTableName: true,
+    }
+);
 class Vendor extends Model {}
 Vendor.init(
     {
@@ -244,6 +261,8 @@ async function selectDataOne(Model, jsonData) {
 }
 
 module.exports = {
+    User,
+    logIN,
     sequelize,
     syncDataBase,
     DistroLinux,
