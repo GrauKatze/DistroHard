@@ -3,22 +3,18 @@ const {
     Vendor,
     Processor,
     VideoCard,
-    selectDataOne,
-    selectDataAllFiltr,
     ProcessorStatusOnLinux,
     VideoCardStatusOnLinux,
     DistroLinux,
     Errors,
+    Hardware
 } = require("./dataBase");
 
 function showHards(req, res) {
-    selectDataAll(Processor).then((proc) => {
-        selectDataAll(VideoCard).then((videoCard) => {
-            res.render("Hards.hbs", {
-                title: "Hards",
-                proc: proc,
-                videoCard: videoCard,
-            });
+    selectDataAll(Hardware).then((hw) => {
+        res.render("Hards.hbs", {
+            title: "Hards",
+            hard: hw
         });
     });
 }
@@ -45,15 +41,9 @@ function indexDataBase(req, res) {
 function searchDataBase(req, res, next) {
     selectDataAll(Vendor)
         .then((Vendor) => {
-            selectDataAll(Processor).then((Processor) => {
-                selectDataAll(VideoCard).then((VideoCard) => {
-                    res.render("DBsearch.hbs", {
-                        title: "Search",
-                        vendor: Vendor,
-                        processor: Processor,
-                        videoCard: VideoCard,
-                    });
-                });
+            res.render("DBsearch.hbs", {
+                title: "Search",
+                vendor: Vendor,
             });
         })
         .catch((err) => console.log(err));

@@ -15,33 +15,13 @@
         <table class="table table-striped table-sm">
             <thead>
                 <th>id</th>
-                <th>vendor</th>
-                <th>model</th>
+                <th>device</th>
             </thead>
             <tbody>
-                {{#each proc}}
+                {{#each hard}}
                 <tr>
                     <td>{{this.id}}</td>
-                    <td>{{this.modelName}}</td>
-                    <td>
-                        <a class="btn btn-primary" href="/database/edit/proc/{{this.id}}">Edit</a>|
-                        <form action="/database/delete/proc/{{this.id}}" method="post">
-                            <input class="btn btn-danger" type="submit" value="delete" />
-                        </form>
-                    </td>
-                </tr>
-                {{/each}}
-                {{#each videoCard}}
-                <tr>
-                    <td>{{this.id}}</td>
-                    <td>{{this.modelName}}</td>
-                    <td>
-                        <a class="btn btn-primary" href="/dataBase/edit/videoCard/{{this.id}}">Edit</a>|
-                        <form action="/dataBase/delete/videoCard/{{this.id}}" method="post">
-                            <input class="btn btn-danger" type="submit" value="delete" />
-                        </form>
-
-                    </td>
+                    <td>{{this.Device}}</td>
                 </tr>
                 {{/each}}
             </tbody>

@@ -13,44 +13,6 @@
     <div class="container">
         <div class="row">
             <form action="" method="post" id="hard-form" style="background-color: #aaaaaa">
-                <h2>Процессор</h2>
-                <div class="row g-2">
-                    <div class="col-sm-6">
-                        <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
-                            name="procVendor">
-                            {{#each vendor}}
-                            <option value="{{this.id}}">{{this.companyName}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div class="col-sm-6">
-                        <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example"
-                            id="procModel" name="procModel">
-                            {{#each processor}}
-                            <option value="{{this.modelName}}">{{this.modelName}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                </div>
-                <h2>Видеокарта</h2>
-                <div class="row g-2">
-                    <div class="col-sm-6">
-                        <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example"
-                            name="videoCardVendor" placeholder="Выберите производителя...">
-                            {{#each vendor}}
-                            <option value="{{this.id}}">{{this.companyName}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div class="col-sm-6">
-                        <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example"
-                            id="videoCardModel" name="videoCardModel">
-                            {{#each videoCard}}
-                            <option value="{{this.modelName}}">{{this.modelName}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                </div>
                 <button type="submit" class="btn btn-primary float-end md-8">
                     Найти
                 </button>

@@ -1,11 +1,12 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("distrohard", "graukatze", "1234", {
-    host: "localhost",
+const sequelize = new Sequelize("distrohard", "db_user", "1234", {
+    host: "192.168.83.101",
+    port: "5000",
     dialect: "postgres",
 });
 let logIN = true;
 
-class User extends Model {}
+class User extends Model { }
 User.init(
     {
         login: {
@@ -21,7 +22,7 @@ User.init(
         freezeTableName: true,
     }
 );
-class Vendor extends Model {}
+class Vendor extends Model { }
 Vendor.init(
     {
         id: {
@@ -38,49 +39,7 @@ Vendor.init(
         freezeTableName: true,
     }
 );
-class Processor extends Model {}
-Processor.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        modelName: DataTypes.STRING(50),
-        vendor_id: {
-            type: DataTypes.INTEGER,
-            references: { model: Vendor, key: "id" },
-        },
-    },
-    {
-        sequelize,
-        modelName: "Processors",
-        timestamps: false,
-        freezeTableName: true,
-    }
-);
-class VideoCard extends Model {}
-VideoCard.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        modelName: DataTypes.STRING(50),
-        vendor_id: {
-            type: DataTypes.INTEGER,
-            references: { model: Vendor, key: "id" },
-        },
-    },
-    {
-        sequelize,
-        modelName: "VideoCards",
-        timestamps: false,
-        freezeTableName: true,
-    }
-);
-class DistroLinux extends Model {}
+class DistroLinux extends Model { }
 DistroLinux.init(
     {
         id: {
@@ -88,8 +47,12 @@ DistroLinux.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        vendor: DataTypes.STRING(50),
+        product: DataTypes.STRING(50),
         version: DataTypes.STRING(50),
+        vendor_id: {
+            type: DataTypes.INTEGER,
+            references: { model: Vendor, key: "id" },
+        },
     },
     {
         sequelize,
@@ -97,8 +60,8 @@ DistroLinux.init(
         timestamps: false,
         freezeTableName: true,
     }
-);
-class Errors extends Model {}
+); 
+class Errors extends Model { }
 Errors.init(
     {
         id: {
@@ -117,58 +80,72 @@ Errors.init(
         freezeTableName: true,
     }
 );
-class ProcessorStatusOnLinux extends Model {}
-ProcessorStatusOnLinux.init(
+class HardwareType extends Model { }
+HardwareType.init(
     {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
         },
-        Processor_id: {
-            type: DataTypes.INTEGER,
-            references: { model: Processor, key: "id" },
-        },
-        DistLinux_id: {
-            type: DataTypes.INTEGER,
-            references: { model: DistroLinux, key: "id" },
-        },
-        Status: DataTypes.STRING(25),
+        type: DataTypes.STRING(10)
     },
     {
         sequelize,
-        modelName: "ProcessorStatusOnLinux",
+        modelName: "HardwareType",
         timestamps: false,
         freezeTableName: true,
     }
 );
-class VideoCardStatusOnLinux extends Model {}
-VideoCardStatusOnLinux.init(
+class Hardware extends Model { }
+Hardware.init(
     {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
         },
-        VideoCard_id: {
+        Device: DataTypes.STRING(20),
+        vendor_id: {
             type: DataTypes.INTEGER,
-            references: { model: VideoCard, key: "id" },
+            references: { model: Vendor, key: "id" },
         },
-        DistLinux_id: {
+        type_id:{
             type: DataTypes.INTEGER,
-            references: { model: DistroLinux, key: "id" },
+            references: {model: HardwareType, key: "id"}
+        }
+    },
+    {
+        sequelize,
+        modelName: "Hardware",
+        timestamps: false,
+        freezeTableName: true,
+    }
+);
+class HardwareStatusOnLinux extends Model {}
+HardwareStatusOnLinux.init(
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        Hardware_id: {
+            type: DataTypes.INTEGER,
+            references: { model: Hardware, key: "id" },
         },
         Status: DataTypes.STRING(25),
     },
     {
         sequelize,
-        modelName: "VideoCardStatusOnLinux",
+        modelName: "HardwareStatusOnLinux",
         timestamps: false,
         freezeTableName: true,
     }
-);
-class ErrorStatusOnProcessor extends Model {}
-ErrorStatusOnProcessor.init(
+)
+
+class ErrorStatusOnHardware extends Model{}
+ErrorStatusOnHardware.init(
     {
         Error_id: {
             type: DataTypes.INTEGER,
@@ -176,38 +153,18 @@ ErrorStatusOnProcessor.init(
         },
         Processor_id: {
             type: DataTypes.INTEGER,
-            references: { model: Processor, key: "id" },
+            references: { model: Hardware, key: "id" },
         },
         Status: DataTypes.STRING(25),
     },
     {
         sequelize,
-        modelName: "ErrorStatusOnProcessor",
+        modelName: "ErrorStatusOnHardware",
         timestamps: false,
         freezeTableName: true,
     }
-);
-class ErrorStatusOnVideoCard extends Model {}
-ErrorStatusOnVideoCard.init(
-    {
-        Error_id: {
-            type: DataTypes.INTEGER,
-            references: { model: Errors, key: "id" },
-        },
-        VideoCard_id: {
-            type: DataTypes.INTEGER,
-            references: { model: VideoCard, key: "id" },
-        },
-        Status: DataTypes.STRING(25),
-    },
-    {
-        sequelize,
-        modelName: "ErrorStatusOnVideoCard",
-        timestamps: false,
-        freezeTableName: true,
-    }
-);
-class ErrorStatusOnLinux extends Model {}
+)
+class ErrorStatusOnLinux extends Model { }
 ErrorStatusOnLinux.init(
     {
         Error_id: {
@@ -228,8 +185,9 @@ ErrorStatusOnLinux.init(
     }
 );
 
+
 async function syncDataBase() {
-    await sequelize.sync({ alter: true }).then(() => {
+    await sequelize.sync({ }).then(() => {
         console.log("\n================Basa was sync================");
     });
 }
@@ -270,17 +228,10 @@ module.exports = {
     insertData,
     deleteData,
     Vendor,
-    Processor,
-    VideoCard,
     selectDataAllFiltr,
     selectDataOne,
-    ProcessorStatusOnLinux,
-    VideoCardStatusOnLinux,
     Errors,
     updateData,
     ErrorStatusOnLinux,
-    ErrorStatusOnVideoCard,
-    ErrorStatusOnProcessor,
-    VideoCardStatusOnLinux,
-    ProcessorStatusOnLinux,
+    Hardware
 };
