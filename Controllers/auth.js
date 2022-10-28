@@ -12,7 +12,7 @@ exports.registration = function (req, res) {
                         bcrypt.hash(req.body.pass, 10, (err, hash) => {
                             return hash
                         })
-                    }, canRead: true, canAdd: false, canDrop: false
+                    }, canRead: true, canAdd: false, canDrop: false, canEdit: false
                 })
             } else {
                 const err = new Error('Login уже используется');
