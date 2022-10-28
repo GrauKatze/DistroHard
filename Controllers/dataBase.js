@@ -16,6 +16,7 @@ User.init(
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
+            autoIncrement: true,
         },
         login: DataTypes.STRING(20),
         pass: DataTypes.STRING(60),
@@ -42,6 +43,7 @@ Vendor.init(
             primaryKey: true,
         },
         companyName: DataTypes.STRING(50),
+        isHard: DataTypes.BOOLEAN
     },
     {
         sequelize: database,
@@ -147,6 +149,10 @@ HardwareStatusOnLinux.init(
         Hardware_id: {
             type: DataTypes.INTEGER,
             references: { model: Hardware, key: "id" },
+        },
+        DistroLinux_id: {
+            type: DataTypes.INTEGER,
+            references: { model: DistroLinux, key: "id" },
         },
         Status: DataTypes.STRING(25),
     },

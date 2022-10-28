@@ -2,32 +2,41 @@ const { selectDataOne, User, insertData, updateData, logIN } = require("./dataBa
 const bcrypt = require("bcrypt");
 const { randomUUID } = require("crypto");
 
+exports.getRegistration = function (req, res) {
+    res.render("registration.hbs", {
+        title: "registration"
+    })
+}
 
-exports.registration = function (req, res) {
+exports.postRegistration = function (req, res) {
+    console.log(req.body);
     if (req.body.login !== null && req.body.pass !== null) {
         if (req.body.pass === req.body.repPass) {
-            if (identification(req.body.login) === null) {
-                insertData(User, {
-                    login: req.body.login, pass: () => {
-                        bcrypt.hash(req.body.pass, 10, (err, hash) => {
-                            return hash
-                        })
-                    }, canRead: true, canAdd: false, canDrop: false, canEdit: false
+            User.findOrCreate({
+                where: { login: req.body.login },
+                defaults: {
+                    login: req.body.login,
+                    pass: bcrypt.hashSync(req.body.pass, bcrypt.genSaltSync(10), null),
+                    canRead: true, canAdd: false, canDrop: false, canEdit: false
+                }
+            }).then(() => {
+                User.findOne({ where: { login: req.body.login } }).then((user) => {
+                    console.log(user.id);
+                    let today = new Date()
+                    let token = randomUUID()
+                    today.setMinutes(today.getMinutes() + 10)
+                    updateData(User, user.id, { token: token, tokenAge: today })
+                        .then(logIN.status = true).then(logIN.login = user.login).then(logIN.token = token)
                 })
-            } else {
-                const err = new Error('Login уже используется');
-                err.status = 400;
-                next(err);
-            }
+                res.redirect("/")
+            })
         } else {
             const err = new Error('Не совпадает пароль и подтверждение пароля!');
             err.status = 400;
-            next(err);
         }
     } else {
         const err = new Error('Не оставляйте поля пустыми');
         err.status = 400;
-        next(err);
     }
 }
 exports.getLogin = function (req, res) {
@@ -70,7 +79,7 @@ exports.auth = async function (res, type) {
                             resolve(user.canDrop)
                         } else if (type === "add") {
                             resolve(user.canAdd)
-                        } else if (type === "edit"){
+                        } else if (type === "edit") {
                             resolve(user.canEdit)
                         }
                     }

@@ -13,6 +13,21 @@
     <div class="container">
         <div class="row">
             <form action="" method="post" id="hard-form" style="background-color: #aaaaaa">
+                <div class="input-group mb-3">
+
+                    <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
+                        name="Proc">
+                        {{#each Proc}}
+                        <option value="{{this.id}}">{{this.Device}}</option>
+                        {{/each}}
+                    </select>
+                    <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
+                        name="videoCard">
+                        {{#each videoCard}}
+                        <option value="{{this.id}}">{{this.Device}}</option>
+                        {{/each}}
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary float-end md-8">
                     Найти
                 </button>

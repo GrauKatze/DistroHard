@@ -7,7 +7,8 @@ const {
     VideoCardStatusOnLinux,
     DistroLinux,
     Errors,
-    Hardware
+    Hardware,
+    HardwareStatusOnLinux
 } = require("./dataBase");
 
 function showHards(req, res) {
@@ -42,78 +43,72 @@ function showErrors(req, res) {
 function indexDataBase(req, res) {
     res.render("DBViews/dataBase.hbs");
 } showDistros
-function searchDataBase(req, res, next) {
-    selectDataAll(Vendor)
-        .then((vnd) => {
+
+function getSearchDataBase(req, res) {
+    Hardware.findAll({ where: { type_id: 0 } }).then((proc) => {
+        Hardware.findAll({ where: { type_id: 1 } }).then((videoCard) => {
             res.render("DBViews/DBsearch.hbs", {
-                title: "Search",
-                vendor: vnd,
-            });
+                title: "search",
+                Proc: proc,
+                videoCard: videoCard
+            })
         })
-        .catch((err) => console.log(err));
+    }).catch((err) => console.log(err))
 }
 
-async function postSearchDataBase(req, res) {
+async function postSearchHards(req, res) {
+    console.log(req.body);
     let hardStatus = [];
-    Processor.findOne({ where: { modelName: req.body.procModel } }).then(
-        (processor) => {
-            ProcessorStatusOnLinux.findAll({
-                where: { Processor_id: processor.id },
-            })
-                .then((procStatusLinux) => {
-                    procStatusLinux.forEach((pSL) => {
-                        DistroLinux.findAll({
-                            where: { id: pSL.DistLinux_id },
-                        }).then((procData) => {
-                            hardStatus.push({
-                                hardModel: processor.modelName,
-                                OS: procData[0].vendor,
-                                status: pSL.Status,
-                            });
-                        });
-                    });
-                })
-                .then(() => {
-                    VideoCard.findOne({
-                        where: { modelName: req.body.videoCardModel },
-                    }).then((videoCard) => {
-                        VideoCardStatusOnLinux.findAll({
-                            where: { VideoCard_id: videoCard.id },
+    Hardware.findOne({ where: { id: req.body.Proc } }).then((proc) => {
+        HardwareStatusOnLinux.findAll({ where: { Hardware_id: proc.id } })
+            .then((PSOL) => {
+                PSOL.forEach((pSL) => {
+                    DistroLinux.findAll({
+                        where: { id: pSL.DistroLinux_id },
+                    }).then((distroLinux) => {
+                        console.log(distroLinux);
+                        hardStatus.push({
+                            hardModel: proc.Device,
+                            OS: distroLinux[0].product + ' ' + distroLinux[0].version,
+                            status: pSL.Status,
                         })
-                            .then((videoCardStatusLinux) => {
-                                videoCardStatusLinux.forEach((vcSL) => {
-                                    DistroLinux.findAll({
-                                        where: { id: vcSL.DistLinux_id },
-                                    }).then((videoCardData) => {
-                                        hardStatus.push({
-                                            hardModel: videoCard.modelName,
-                                            OS: videoCardData[0].vendor,
-                                            status: vcSL.Status,
-                                        });
-                                    });
-                                });
+                    })
+                })
+            }).then(() => {
+                Hardware.findOne({ where: { id: 1 } }).then((videoCard) => {
+                    HardwareStatusOnLinux.findAll({ where: { Hardware_id: videoCard.id } })
+                        .then((VSOL) => {
+                            VSOL.forEach((vSL) => {
+                                DistroLinux.findAll({
+                                    where: { id: vSL.DistroLinux_id },
+                                }).then((distroLinux) => {
+                                    hardStatus.push({
+                                        hardModel: videoCard.Device,
+                                        OS: distroLinux[0].product + ' ' + distroLinux[0].version,
+                                        status: vSL.Status,
+                                    })
+                                })
                             })
-                            .then(() =>
-                                setTimeout(function () {
-                                    res.render("results.hbs", {
-                                        title: "result",
-                                        result: hardStatus,
-                                    });
-                                    console.log(hardStatus);
-                                }, 2000)
-                            );
+                        })
+                })
+            }).then(() =>
+                setTimeout(function () {
+                    res.render("results.hbs", {
+                        title: "result",
+                        result: hardStatus,
                     });
-                });
-        }
-    );
+                    console.log(hardStatus);
+                }, 2000)
+            )
+    })
 }
 
 module.exports = {
     indexDataBase,
-    searchDataBase,
-    postSearchDataBase,
     showHards,
     showDistros,
     showDistros,
     showErrors,
+    getSearchDataBase,
+    postSearchHards
 };

@@ -22,7 +22,7 @@ function getDelHard(req, res) {
 
 async function postDelHard(req, res) {
     let answer = await auth(res,"drop")
-    if (answer===true) {
+    if (answer===true){
         if (!req.params) return res.sendStatus(400)
         console.log("start del");
         ErrorStatusOnHardware.findOne({

@@ -1,18 +1,15 @@
 const express = require("express");
 const {
-    editProc,
-    editVideoCard,
-    postEditProc,
-    postEditVideoCard,
+    getEditHard,
+    postEditHard,
 } = require("../Controllers/editDBController");
 
 const editRouter = express.Router();
 const urlencodedParser = express.urlencoded({ extended: false });
 
-editRouter.get("/proc/:procID", editProc);
-editRouter.get("/videoCard/:videoCardID", editVideoCard);
-editRouter.post("/proc/:procID", urlencodedParser, postEditProc);
-editRouter.post("/videoCard/:videoCardID", urlencodedParser, postEditVideoCard);
+editRouter.get("/hard/:hardID", getEditHard)
+
+editRouter.post("/hard/:hardID", urlencodedParser, postEditHard);
 
 module.exports = {
     editRouter,

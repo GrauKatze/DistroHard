@@ -1,168 +1,83 @@
+const { auth } = require("./auth");
 const {
-    updateData,
-    Processor,
-    selectDataAllFiltr,
     Vendor,
-    selectDataAll,
-    selectDataOne,
-    VideoCard,
     DistroLinux,
-    ProcessorStatusOnLinux,
-    VideoCardStatusOnLinux,
     logIN,
+    Hardware,
+    HardwareStatusOnLinux,
 } = require("./dataBase");
 
-function editProc(req, res) {
-    if (logIN) {
-        const procID = req.params.procID;
-        Vendor.findAll()
-            .then((vendors) => {
-                Processor.findOne({ where: { id: procID } }).then((proc) => {
-                    Vendor.findByPk(proc.vendor_id).then((vendor) => {
-                        DistroLinux.findAll().then((linux) =>
+function getEditHard(req, res) {
+    if (logIN.status) {
+        const hardID = req.params.hardID;
+        Hardware.findByPk(hardID).then((hard) => {
+            Vendor.findAll().then((vendors) => {
+                Vendor.findByPk(hard.vendor_id).then((vendor) => {
+                    DistroLinux.findAll().then((linuxes) => {
+                        DistroLinux.findByPk(hard.DistLinux_id).then((linux) => {
                             res.render("Edit.hbs", {
-                                obj: proc,
-                                linux: linux,
-                                vendor: vendors,
+                                hard: hard,
                                 venID: vendor.companyName,
+                                vendors: vendors,
+                                linuxes: linuxes
                             })
-                        );
-                    });
-                });
+                        })
+                    })
+                })
             })
-            .catch((err) => console.log(err));
+        })
     } else {
-        res.redirect("/");
-    }
-}
-function editVideoCard(req, res) {
-    if (logIN) {
-        const videoCardID = req.params.videoCardID;
-        Vendor.findAll()
-            .then((vendors) => {
-                VideoCard.findOne({ where: { id: videoCardID } }).then(
-                    (videoCard) => {
-                        Vendor.findByPk(videoCard.vendor_id).then((vendor) => {
-                            DistroLinux.findAll().then((linux) =>
-                                res.render("Edit.hbs", {
-                                    obj: videoCard,
-                                    linux: linux,
-                                    vendor: vendors,
-                                    venID: vendor.companyName,
-                                })
-                            );
-                        });
-                    }
-                );
-            })
-            .catch((err) => console.log(err));
-    } else {
-        res.redirect("/");
+        res.redirect("/login")
     }
 }
 
-function postEditProc(req, res) {
-    if (logIN) {
+async function postEditHard(req, res) {
+    let answer = await auth(res, "edit")
+    if (answer === true){
         if (!req.body) return res.sendStatus(400);
         console.log(req.body);
         console.log(req.params);
-        Processor.update(
-            {
-                modelName: req.body.modelName,
-                vendor_id: req.body.Vendor,
-            },
-            {
-                where: {
-                    id: req.params.procID,
-                },
+        // [Object: null prototype] {
+        //     Vendor: '1',
+        //     modelName: '',
+        //     linuxVendor: '0',
+        //     linuxStatus: 'G'
+        //   }
+        //   { hardID: '1' }
+
+        console.log(req.body.linuxStatus);
+
+
+        Hardware.findByPk(req.params.hardID).then((hard) => {
+            if (req.body.modelName !== '') {
+                var modelName = req.body.modelName
+            } else {
+                var modelName = hard.Device;
             }
-        )
-            .then(() => {
-                if (req.body.LinuxStatus !== null) {
-                    ProcessorStatusOnLinux.findOne({
-                        where: {
-                            Processor_id: req.params.procID,
-                            DistLinux_id: req.body.linuxVendor,
-                        },
-                    }).then((PSOL) => {
-                        if (PSOL !== null) {
-                            ProcessorStatusOnLinux.update(
-                                { Status: req.body.linuxStatus },
-                                {
-                                    where: {
-                                        Processor_id: req.params.procID,
-                                        DistLinux_id: req.body.linuxVendor,
-                                    },
-                                }
-                            );
-                        } else {
-                            ProcessorStatusOnLinux.create({
-                                Processor_id: req.params.procID,
-                                DistLinux_id: req.body.linuxVendor,
-                                Status: req.body.linuxStatus,
-                            });
-                        }
-                    });
-                }
-            })
-            .then(() => res.redirect("/dataBase/hards"));
-    } else {
-        res.redirect("/");
-    }
-}
-function postEditVideoCard(req, res) {
-    if (logIN) {
-        if (!req.body) return res.sendStatus(400);
-        console.log(req.body);
-        console.log(req.params);
-        VideoCard.update(
-            {
-                modelName: req.body.modelName,
-                vendor_id: req.body.Vendor,
-            },
-            {
-                where: {
-                    id: req.params.videoCardID,
-                },
+            hard.update({ Device: modelName, Vendor: req.body.Vendor })
+        }).then(() => {
+            if (req.body.LinuxStatus !== null) {
+                HardwareStatusOnLinux.findOrCreate({
+                    where: {
+                        Hardware_id: req.params.hardID,
+                        DistroLinux_id: req.body.linuxVendor
+                    },
+                    default: {
+                        Hardware_id: req.params.hardID,
+                        Status: req.body.linuxStatus,
+                        DistroLinux_id: req.body.linuxVendor,
+                    }
+                })
             }
-        )
-            .then(() => {
-                if (req.body.LinuxStatus !== null) {
-                    VideoCardStatusOnLinux.findOne({
-                        where: {
-                            VideoCard_id: req.params.videoCardID,
-                            DistLinux_id: req.body.linuxVendor,
-                        },
-                    }).then((PSOL) => {
-                        if (PSOL !== null) {
-                            VideoCardStatusOnLinux.update(
-                                { Status: req.body.linuxStatus },
-                                {
-                                    where: {
-                                        VideoCard_id: req.params.videoCardID,
-                                        DistLinux_id: req.body.linuxVendor,
-                                    },
-                                }
-                            );
-                        } else {
-                            VideoCardStatusOnLinux.create({
-                                VideoCard_id: req.params.videoCardID,
-                                DistLinux_id: req.body.linuxVendor,
-                                Status: req.body.linuxStatus,
-                            });
-                        }
-                    });
-                }
-            })
-            .then(() => res.redirect("/dataBase/hards"));
+        }).then(() => {
+            res.redirect("/dataBase/Hards")
+        })
     } else {
-        res.redirect("/");
+        res.redirect("/login")
     }
 }
 
 module.exports = {
-    editProc,
-    editVideoCard,
-    postEditProc,
-    postEditVideoCard,
+    getEditHard,
+    postEditHard
 };

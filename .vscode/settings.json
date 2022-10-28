@@ -1,4 +1,5 @@
 {
     "breadcrumbs.icons": true,
-    "window.autoDetectColorScheme": false
+    "window.autoDetectColorScheme": false,
+    "git.autofetch": "all"
 }

@@ -15,14 +15,14 @@
         <div class="row">
             <div class="container">
                 <label>old data:</label>
-                <p>ID - {{obj.id}} Vendor -{{venID}} modelName - {{obj.modelName}}</p>
+                <p>ID - {{hard.id}} Vendor - {{venID}} modelName - {{hard.Device}}</p>
             </div>
             <form method="POST">
                 <label>Vendor
                 </label><br>
                 <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" id="Type"
                     name="Vendor">
-                    {{#each vendor}}
+                    {{#each vendors}}
                     <option value="{{this.id}}">{{this.companyName}}</option>
                     {{/each}}
                 </select>
@@ -32,14 +32,12 @@
                 <div class="input-group mb-3">
                     <select class="form-select form-select" aria-label=".form-select-sm example" id="Type"
                         name="linuxVendor">
-                        {{#each linux}}
-                        <option value="{{this.id}}">{{this.vendor}}</option>
+                        {{#each linuxes}}
+                        <option value="{{this.id}}">{{this.product}} {{this.version}}</option>
                         {{/each}}
                     </select>
                     <input type="text" name="linuxStatus" class="form-control" placeholder="LinuxStatus">
                 </div>
-
-
                 <button type="submit" class="btn btn-primary float-end md-8">
                     Изменить
                 </button>

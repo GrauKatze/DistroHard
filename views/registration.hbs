@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>{{title}}</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+
+<body>
+    {{>menu}}
+    <hr>
+    <h1>login</h1>
+    <div class="container">
+        <div class="row">
+            <form action="" method="post" id="hard-form" style="background-color: #aaaaaa">
+                <h2>Пользователь</h2>
+                <div class="row g-2">
+                    <div>
+                        <input name="login" type="text" class="form-control md-3" placeholder="login"
+                            aria-label="login">
+                        <input name="pass" type="text" class="form-control md-3" placeholder="pass" aria-label="pass">
+                        <input name="repPass" type="text" class="form-control md-3" placeholder="repPass"
+                            aria-label="new Pass">
+                    </div>
+                    <div>
+                        <form action="/registration" method="post">
+                            <input class="btn btn-primary" type="submit" value="Registration" />
+                        </form>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <script src="jquery/dist/jquery.slim.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

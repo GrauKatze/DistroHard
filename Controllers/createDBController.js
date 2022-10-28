@@ -30,18 +30,17 @@ function createDataBase(req, res) {
     }
 }
 function postCreateDataBase(req, res) {
-    let answer = auth(res,"add")
-    console.log(answer);
+    let answer = auth(res, "add")
     if (answer) {
         if (!req.body) return res.sendStatus(400);
-        insertData(Hardware, {
+        Hardware.create({
             Device: req.body.modelName,
             vendor_id: req.body.hardVendor,
             type_id: req.body.hardType,
-        })
-        setTimeout(() => {
+        }).then(() => {
             res.redirect("/dataBase/hards");
-        }, 1000);
+        })
+
     } else {
         res.redirect("/login");
     }
