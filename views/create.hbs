@@ -16,8 +16,9 @@
             <form method="post">
                 <label>type</label>
                 <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" name="hardType">
-                    <option value="Processor">proc</option>
-                    <option value="VideoCard">videocard</option>
+                    {{#each htype}}
+                    <option value="{{this.id}}">{{this.hardType}}</option>
+                    {{/each}}
                 </select>
                 <label>vendor</label>
                 <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" name="hardVendor">

@@ -1,22 +1,33 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("distrohard", "db_user", "1234", {
+const database = new Sequelize("distrohard", "db_admin", "1234", {
     host: "192.168.83.101",
     port: "5000",
     dialect: "postgres",
 });
-let logIN = true;
+let logIN = {
+    status: false,
+    login: "",
+    token: ""
+}
 
 class User extends Model { }
 User.init(
     {
-        login: {
-            type: DataTypes.STRING(12),
+        id: {
+            type: DataTypes.INTEGER,
             primaryKey: true,
         },
-        pass: DataTypes.STRING(50),
+        login: DataTypes.STRING(20),
+        pass: DataTypes.STRING(60),
+        canRead: DataTypes.BOOLEAN,
+        canAdd: DataTypes.BOOLEAN,
+        canDrop: DataTypes.BOOLEAN,
+        canEdit: DataTypes.BOOLEAN,
+        token: DataTypes.UUID,
+        tokenAge: DataTypes.DATE
     },
     {
-        sequelize,
+        sequelize: database,
         modelName: "Users",
         timestamps: false,
         freezeTableName: true,
@@ -33,7 +44,7 @@ Vendor.init(
         companyName: DataTypes.STRING(50),
     },
     {
-        sequelize,
+        sequelize: database,
         modelName: "Vendors",
         timestamps: false,
         freezeTableName: true,
@@ -55,7 +66,7 @@ DistroLinux.init(
         },
     },
     {
-        sequelize,
+        sequelize: database,
         modelName: "DistroLinux",
         timestamps: false,
         freezeTableName: true,
@@ -72,9 +83,12 @@ Errors.init(
         codeCVE: {
             type: DataTypes.STRING(20),
         },
+        discription: {
+            type: DataTypes.TEXT,
+        },
     },
     {
-        sequelize,
+        sequelize: database,
         modelName: "Errors",
         timestamps: false,
         freezeTableName: true,
@@ -88,10 +102,10 @@ HardwareType.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        type: DataTypes.STRING(10)
+        hardType: DataTypes.STRING(10)
     },
     {
-        sequelize,
+        sequelize: database,
         modelName: "HardwareType",
         timestamps: false,
         freezeTableName: true,
@@ -116,7 +130,7 @@ Hardware.init(
         }
     },
     {
-        sequelize,
+        sequelize: database,
         modelName: "Hardware",
         timestamps: false,
         freezeTableName: true,
@@ -137,13 +151,12 @@ HardwareStatusOnLinux.init(
         Status: DataTypes.STRING(25),
     },
     {
-        sequelize,
+        sequelize: database,
         modelName: "HardwareStatusOnLinux",
         timestamps: false,
         freezeTableName: true,
     }
 )
-
 class ErrorStatusOnHardware extends Model{}
 ErrorStatusOnHardware.init(
     {
@@ -151,14 +164,14 @@ ErrorStatusOnHardware.init(
             type: DataTypes.INTEGER,
             references: { model: Errors, key: "id" },
         },
-        Processor_id: {
+        Hardware_id: {
             type: DataTypes.INTEGER,
             references: { model: Hardware, key: "id" },
         },
         Status: DataTypes.STRING(25),
     },
     {
-        sequelize,
+        sequelize: database,
         modelName: "ErrorStatusOnHardware",
         timestamps: false,
         freezeTableName: true,
@@ -178,7 +191,7 @@ ErrorStatusOnLinux.init(
         Status: DataTypes.STRING(25),
     },
     {
-        sequelize,
+        sequelize: database,
         modelName: "ErrorStatusOnLinux",
         timestamps: false,
         freezeTableName: true,
@@ -187,7 +200,7 @@ ErrorStatusOnLinux.init(
 
 
 async function syncDataBase() {
-    await sequelize.sync({ }).then(() => {
+    await database.sync({alter: true}).then(() => {
         console.log("\n================Basa was sync================");
     });
 }
@@ -221,7 +234,7 @@ async function selectDataOne(Model, jsonData) {
 module.exports = {
     User,
     logIN,
-    sequelize,
+    sequelize: database,
     syncDataBase,
     DistroLinux,
     selectDataAll,
@@ -233,5 +246,8 @@ module.exports = {
     Errors,
     updateData,
     ErrorStatusOnLinux,
-    Hardware
+    Hardware,
+    HardwareType,
+    ErrorStatusOnHardware,
+    HardwareStatusOnLinux
 };

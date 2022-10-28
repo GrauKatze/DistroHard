@@ -1,44 +1,49 @@
+const { auth } = require("./auth");
 const {
     selectDataAll,
     Vendor,
     insertData,
-    Processor,
-    VideoCard,
     logIN,
+    HardwareType,
+    Hardware,
 } = require("./dataBase");
 
 function createDataBase(req, res) {
-    if (logIN) {
+    if (logIN.status) {
         selectDataAll(Vendor)
             .then((Vendor) => {
-                res.render("create.hbs", {
-                    title: "create",
-                    vendor: Vendor,
-                });
+                selectDataAll(HardwareType).then((HardwareType) => {
+                    res.render("create.hbs", {
+                        title: "create",
+                        vendor: Vendor,
+                        htype: HardwareType
+                    });
+                }).catch((err) => {
+                    console.log(err)
+                    res.redirect('/dataBase')
+                })
+
             })
             .catch((err) => console.log(err));
     } else {
-        res.redirect("/");
+        res.redirect("/login");
     }
 }
 function postCreateDataBase(req, res) {
-    if (logIN) {
+    let answer = auth(res,"add")
+    console.log(answer);
+    if (answer) {
         if (!req.body) return res.sendStatus(400);
-        console.log(req.body);
-        let newNote = {
-            modelName: req.body.modelName,
+        insertData(Hardware, {
+            Device: req.body.modelName,
             vendor_id: req.body.hardVendor,
-        };
-        let Modul;
-        if (req.body.hardType === "Processor") {
-            Modul = Processor;
-        } else if (req.body.hardType === "VideoCard") Modul = VideoCard;
-        insertData(Modul, newNote);
+            type_id: req.body.hardType,
+        })
         setTimeout(() => {
             res.redirect("/dataBase/hards");
         }, 1000);
     } else {
-        res.redirect("/");
+        res.redirect("/login");
     }
 }
 module.exports = {

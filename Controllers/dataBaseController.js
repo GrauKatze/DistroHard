@@ -12,7 +12,7 @@ const {
 
 function showHards(req, res) {
     selectDataAll(Hardware).then((hw) => {
-        res.render("Hards.hbs", {
+        res.render("DBViews/Hards.hbs", {
             title: "Hards",
             hard: hw
         });
@@ -20,15 +20,19 @@ function showHards(req, res) {
 }
 function showDistros(req, res) {
     selectDataAll(DistroLinux).then((distr) => {
-        res.render("Distros.hbs", {
-            title: "Distros",
-            distr: distr,
-        });
+        Vendor.findAll({ where: { id: 1 } }).then((vendor_name) => {
+            // distr.vendor_id = vendor_name
+            res.render("DBViews/Distros.hbs", {
+                title: "Distros",
+                distr: distr,
+            });
+            console.log(distr)
+        })
     });
 }
 function showErrors(req, res) {
     selectDataAll(Errors).then((err) => {
-        res.render("Errors.hbs", {
+        res.render("DBViews/Errors.hbs", {
             title: "Errors",
             err: err,
         });
@@ -36,14 +40,14 @@ function showErrors(req, res) {
 }
 
 function indexDataBase(req, res) {
-    res.render("dataBase.hbs");
-}
+    res.render("DBViews/dataBase.hbs");
+} showDistros
 function searchDataBase(req, res, next) {
     selectDataAll(Vendor)
-        .then((Vendor) => {
-            res.render("DBsearch.hbs", {
+        .then((vnd) => {
+            res.render("DBViews/DBsearch.hbs", {
                 title: "Search",
-                vendor: Vendor,
+                vendor: vnd,
             });
         })
         .catch((err) => console.log(err));

@@ -1,12 +1,15 @@
 const express = require("express");
 const hbs = require("hbs");
+const bcrypt = require("bcrypt");
 const path = require("path");
-const { syncDataBase } = require("./Controllers/dataBase");
+const { syncDataBase, selectDataOne, insertData, User, updateData } = require("./Controllers/dataBase");
 const { createRouter } = require("./Routers/createDBRoute");
 const { dataBaseRouter } = require("./Routers/dataBaseRouter");
 const { deleteBaseRouter } = require("./Routers/deleteDBRouter");
 const { editRouter } = require("./Routers/editDBRouter");
 const { homeRouter } = require("./Routers/homeRouter");
+const { randomUUID } = require("crypto");
+const { registration } = require("./Controllers/auth");
 
 const app = express();
 const PORT = 3000;
@@ -24,6 +27,7 @@ app.use(
 app.use(express.json());
 app.set("view engine", "hbs");
 hbs.registerPartials(path.join(__dirname + "/views/partials"));
+
 //API
 app.use("/", homeRouter);
 app.use("/database", dataBaseRouter);
@@ -35,7 +39,8 @@ app.use(function (req, res) {
 });
 
 app.listen(PORT, () => console.log(`My port is ${PORT}`));
-syncDataBase();
+syncDataBase()
+
 module.exports = {
     app,
     PORT,

@@ -1,141 +1,57 @@
+const { auth } = require("./auth");
 const {
-    Vendor,
-    VideoCard,
-    deleteData,
-    Processor,
-    selectDataAll,
     selectDataAllFiltr,
-    ErrorStatusOnProcessor,
-    ProcessorStatusOnLinux,
-    ErrorStatusOnVideoCard,
-    VideoCardStatusOnLinux,
     logIN,
+    Hardware,
+    ErrorStatusOnHardware,
+    HardwareStatusOnLinux,
 } = require("./dataBase");
 
-function deleteProcDB(req, res) {
+function getDelHard(req, res) {
     if (logIN) {
-        const procID = req.params.procID;
-        selectDataAll(Vendor)
-            .then((vendor) => {
-                selectDataAllFiltr(Processor, { id: procID }).then((proc) => {
-                    Vendor.findByPk(proc[0].vendor_id).then((vendorID) =>
-                        res.render("delete.hbs", {
-                            obj: proc[0],
-                            vendor: vendor,
-                            venID: vendorID.companyName,
-                        })
-                    );
-                });
+        selectDataAllFiltr(Hardware, { id: req.params.hardID }).then((hard) => {
+            console.log(hard);
+            res.render("delete.hbs", {
+                id: hard[0].id,
+                venID: hard[0].vendor_id,
+                modelName: hard[0].Device
             })
-            .catch((err) => console.log(err));
-    } else {
-        res.redirect("/");
+        })
     }
 }
-function deleteVideoCardDB(req, res) {
-    if (logIN) {
-        const videoCardID = req.params.videoCardID;
-        selectDataAll(Vendor)
-            .then((vendor) => {
-                selectDataAllFiltr(VideoCard, { id: videoCardID }).then(
-                    (videoCard) => {
-                        Vendor.findByPk(videoCard[0].vendor_id).then(
-                            (vendorID) =>
-                                res.render("delete.hbs", {
-                                    obj: videoCard[0],
-                                    vendor: vendor,
-                                    venID: vendorID.companyName,
-                                })
-                        );
-                    }
-                );
-            })
-            .catch((err) => console.log(err));
-    } else {
-        res.redirect("/");
-    }
-}
-function postDeleteProcDB(req, res) {
-    if (logIN) {
-        console.log("proc");
-        if (!req.params) return res.sendStatus(400);
-        console.log(req.params);
 
-        ErrorStatusOnProcessor.findAll({
+async function postDelHard(req, res) {
+    let answer = await auth(res,"drop")
+    if (answer===true) {
+        if (!req.params) return res.sendStatus(400)
+        console.log("start del");
+        ErrorStatusOnHardware.findOne({
             raw: true,
-            where: { Processor_id: req.params.procID },
-        })
-            .then((ESONP) => {
-                if (ESONP !== null)
-                    ESONP.forEach((el) => {
-                        ErrorStatusOnProcessor.destroy({
-                            where: { id: el.id },
-                        });
-                    });
-            })
-            .then(
-                ProcessorStatusOnLinux.findAll({
-                    where: { Processor_id: req.params.procID },
+            where: { Hardware_id: req.params.hardID }
+        }).then((EROH) => {
+            if (EROH !== null) EROH.forEach((el) => {
+                ErrorStatusOnHardware.destroy({
+                    where: { id: el.id }
                 })
-                    .then((PSOL) => {
-                        if (PSOL !== null)
-                            PSOL.forEach((el) => {
-                                ProcessorStatusOnLinux.destroy({
-                                    where: { id: el.id },
-                                });
-                            });
-                    })
-                    .then(() =>
-                        Processor.destroy({ where: { id: req.params.procID } })
-                    )
-                    .then(() => res.redirect("/dataBase/hards"))
-            );
-    } else {
-        res.redirect("/");
-    }
-}
-function postDeleteVideoCardDB(req, res) {
-    if (logIN) {
-        if (!req.params) return res.sendStatus(400);
-        console.log(req.params);
-        ErrorStatusOnVideoCard.findAll({
-            where: { VideoCard_id: req.params.videoCardID },
-        })
-            .then((EROVC) => {
-                if (EROVC !== null)
-                    EROVC.forEach((el) => {
-                        ErrorStatusOnVideoCard.destroy({
-                            where: { id: el.id },
-                        });
-                    });
             })
-            .then(() =>
-                VideoCardStatusOnLinux.findAll({
-                    where: { VideoCard_id: req.params.videoCardID },
-                })
-                    .then((VCSOL) => {
-                        if (VCSOL !== null)
-                            VCSOL.forEach((el) =>
-                                VideoCardStatusOnLinux.destroy({
-                                    where: { id: el.id },
-                                })
-                            );
+        }).then(
+            HardwareStatusOnLinux.findOne({
+                raw: true,
+                where: { Hardware_id: req.params.hardID }
+            })
+                .then((HSOL) => {
+                    if (HSOL !== null) HSOL.forEach((el) => {
+                        HardwareStatusOnLinux.destroy({ where: { id: el.id } })
                     })
-                    .then(
-                        VideoCard.destroy({
-                            where: { id: req.params.videoCardID },
-                        })
-                    )
-                    .then(() => res.redirect("/dataBase/hards"))
-            );
-    } else {
-        res.redirect("/");
+                })
+        ).then(Hardware.destroy({ where: { id: req.params.hardID } }))
+            .then(res.redirect("/dataBase/hards"))
+    }else{
+        res.redirect("/login")
     }
 }
 
 module.exports = {
-    deleteProcDB,
-    deleteVideoCardDB,
-    postDeleteVideoCardDB,
-    postDeleteProcDB,
+    getDelHard,
+    postDelHard,
 };

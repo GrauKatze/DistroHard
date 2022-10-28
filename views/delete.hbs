@@ -12,15 +12,17 @@
 <body>
     {{> menu}}
     <div class="container">
-        <div class="row">
+        <div class="row">proc
             <form method="post">
                 <div class="container">
                     <label>old data:</label>
-                    <p name="ID">ID - {{obj.id}} </p>
+                    <p name="ID">ID - {{id}} </p>
                     <p name="vendor"> Vendor -{{venID}}</p>
-                    <p name="modelName"> modelName - {{obj.modelName}}</p>
+                    <p name="modelName"> modelName - {{modelName}}</p>
                 </div>
-                <button type="submit" class="btn btn-danger">delete</button>
+                <form action="/dataBase/delete/hardware/{{this.id}}" method="post">
+                    <input class="btn btn-danger" type="submit" value="delete" />
+                </form>
             </form>
         </div>
     </div>

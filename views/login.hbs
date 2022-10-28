@@ -2,7 +2,7 @@
 <html lang="ru">
 
 <head>
-    <title>404</title>
+    <title>{{title}}</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    {{> menu}}
+    {{>menu}}
     <hr>
     <h1>login</h1>
     <div class="container">
@@ -20,11 +20,19 @@
             <form action="" method="post" id="hard-form" style="background-color: #aaaaaa">
                 <h2>Пользователь</h2>
                 <div class="row g-2">
-                    <input name="login" type="text" class="form-control md-3" placeholder="login" aria-label="login">
-                    <input name="pass" type="text" class="form-control md-3" placeholder="pass" aria-label="pass">
-                    <button type="submit" class="btn btn-primary float-end md-8">
-                        войти
-                    </button>
+                    <div>
+                        <input name="login" type="text" class="form-control md-3" placeholder="login"
+                            aria-label="login">
+                        <input name="pass" type="text" class="form-control md-3" placeholder="pass" aria-label="pass">
+                    </div>
+                    <div>
+                        <form action="/login" method="post">
+                            <input class="btn btn-primary" type="submit" value="LogIn" />
+                        </form>
+                        <form action="/registration" method="get">
+                            <input class="btn btn-primary" type="submit" value="Registration" />
+                        </form>
+                    </div>
                 </div>
             </form>
         </div>
